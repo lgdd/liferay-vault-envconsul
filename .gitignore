@@ -1,0 +1,10 @@
+**/*.iml
+**/.ivy
+**/.classpath
+**/.project
+**/.settings
+**/bin
+**/build
+**/node_modules
+**/tmp
+.idea
