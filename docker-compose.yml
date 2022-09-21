@@ -1,5 +1,7 @@
 version: "3"
 services:
+  # For this PoC, we want to automatically
+  # have Liferay secrets written into Vault.
   init:
     build:
       dockerfile: Dockerfile
@@ -9,12 +11,17 @@ services:
       VAULT_TOKEN: dev-only-token
     depends_on:
       - vault
+  # Vault with Liferay secrets
+  # store under "secret/liferay".
   vault:
     image: vault:latest
     ports:
       - "8200:8200"
     environment:
+      # We use it in dev mode (insecure in production).
       VAULT_DEV_ROOT_TOKEN_ID: dev-only-token
+  # Liferay DXP 7.4 (u42) with our own image based on the official one
+  # where we installed Envconsul and updated the entrypoint accordingly.
   liferay:
     build:
       dockerfile: Dockerfile
@@ -33,6 +40,7 @@ services:
     depends_on:
       - db
       - vault
+  # Database with MySQL 5.7.
   db:
     image: mysql:5.7
     environment:
