@@ -29,6 +29,7 @@ The Docker Compose will start Vault and then our custom container will store 2 s
   }
 }
 ```
+
 > You can find this data in [./init/secrets.json](init/secrets.json) which is used by [./init/init-secrets.sh](init/init-secrets.sh). This script is being copied into the container as described in [./init/Dockerfile](init/Dockerfile).
 
 In order to fetch those secrets and add them as environment variables for Liferay DXP to use, we're taking advantage of Envconsul.
@@ -42,7 +43,8 @@ envconsul -no-prefix=true -upcase -vault-renew-token=false -vault-addr="${VAULT_
 # With config file
 envconsul -config "/opt/liferay/envconsul/config.hcl" -vault-addr="${VAULT_ADDR}" /usr/local/bin/liferay_entrypoint.sh
 ```
-> The format is `envconsul {options} {process}` where you can have inline options where all of them could be store in a `.hcl` configuration file (e.g. [./liferay/config.hcl](liferay/config.hcl)).
+
+> The format is `envconsul {options} {process}` where you can have inline options, and all of them could be stored in a `.hcl` configuration file (e.g. [./liferay/config.hcl](liferay/config.hcl)).
 
 So we're building our own [Dockerfile](liferay/Dockerfile) for Liferay DXP (based on the official image) to install Envconsul, copy our config file and update the entrypoint to let envconsul start the main process.
 
